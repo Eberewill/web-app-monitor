@@ -5,6 +5,7 @@
 var http = require("http");
 var url = require("url");
 var stringDecoder = require("string_decoder").StringDecoder;
+
 // server should respond to all request with a string
 var server = http.createServer((req, res) => {
   //get url and parse it
@@ -15,31 +16,29 @@ var server = http.createServer((req, res) => {
   var path = parsedUrl.pathname;
   var trimmedPath = path.replace(/^\/+|\/+$/g, "");
 
-  //request method
+  //get the request method
   var reqMethod = req.method.toLocaleLowerCase();
 
   //request header
   var reqHeader = req.headers;
 
-  //Get Request Querry
+  //Get Request Querry string as object
   var querryStringObj = parsedUrl.query;
 
   //handling request payload
-
   var decoder = new stringDecoder("utf-8");
 
+  //intiate a buffer iplaceholder for sting
   var buffer = "";
+
+  //listen to an event emitted data
   req.on("data", (data) => {
     buffer += decoder.write(data);
   });
 
   req.on("end", () => {
     buffer += decoder.end();
-
-    //send response
-    res.end("payload was recieved:  " + buffer);
-    //log it on console
-    console.log(buffer);
+    res.end("hello world of event emitter");
   });
 });
 
